@@ -4,6 +4,7 @@ import { createPost } from '../actions';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
+import { toastr } from 'react-redux-toastr';
 
 class PostsNew extends Component {
     renderField(field) {
@@ -24,8 +25,13 @@ class PostsNew extends Component {
         );
     }
     onSubmit(values) {
-        this.props.createPost(values, () => {
-            this.props.history.push('/');
+        this.props.createPost(values, (err) => {
+            if (err) {
+                toastr.error('Error', 'Post Cannot be added!!');
+                return;
+            }
+            this.props.history.push('/home');
+            toastr.success('Success', 'Post added!');
         });
     }
     render() {
@@ -66,6 +72,7 @@ function validate(values) {
     }
     return errors;
 }
+
 export default reduxForm({
     validate,
     form: 'PostsNewForm'
