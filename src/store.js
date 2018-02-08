@@ -4,10 +4,14 @@ import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import reducers from './reducers';
 import { LOGGED_IN } from './actions';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 const loggerMiddleware = createLogger();
 
-const createStoreWithMiddleware = applyMiddleware(promise, thunk, loggerMiddleware)(createStore);
-const store = createStoreWithMiddleware(reducers);
+// const createStoreWithMiddleware = applyMiddleware(promise, thunk, loggerMiddleware)(createStore);
+const store = createStore(reducers, composeWithDevTools(
+    applyMiddleware(promise, thunk, loggerMiddleware)
+));
 
 const user = localStorage.getItem('userAuthToken');
 
